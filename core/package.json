@@ -5,8 +5,12 @@
         "Anirudha Bose <ani07nov@gmail.com>",
         "vperez@yolaw.fr"
     ],
-    "description": "",
-    "license": "MIT",
+    "description": "A platform to create and distribute cryptotokens via Initial Coin Offerings (ICO)",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/onyb/ethane.git"
+    },
+    "license": "Apache-2.0",
     "engines": {
         "node": ">=0.10"
     },
