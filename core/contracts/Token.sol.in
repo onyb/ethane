@@ -1,0 +1,9 @@
+pragma solidity ^0.4.11;
+
+import 'zeppelin-solidity/contracts/token/{{ TOKEN_TYPE }}.sol';
+
+contract {{ TOKEN_CLASS_NAME }} is {{ TOKEN_TYPE }} {
+  string public name = "{{ TOKEN_PUBLIC_NAME }}";
+  string public symbol = "{{ TOKEN_SYMBOL_NAME }}";
+  uint256 public decimals = {{ TOKEN_DECIMALS }};
+}
