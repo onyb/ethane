@@ -25,3 +25,9 @@ class Token(models.Model):
         choices=TOKEN_TYPES,
         default=TOKEN_TYPES[0][0],
     )
+
+    @property
+    def class_name(self):
+        return ''.join(
+            map(lambda s: s.title(), self.public_name.split())
+        )
