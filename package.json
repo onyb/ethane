@@ -1,0 +1,21 @@
+{
+    "name": "ethane",
+    "version": "0.0.1",
+    "author": [
+        "Anirudha Bose <ani07nov@gmail.com>",
+        "vperez@yolaw.fr"
+    ],
+    "description": "",
+    "license": "MIT",
+    "engines": {
+        "node": ">=0.10"
+    },
+    "scripts": {
+        "start": ""
+    },
+    "dependencies": {
+        "ethereumjs-testrpc": "4.0.1",
+        "truffle": "3.4.4",
+        "zeppelin-solidity": "1.1.0"
+    }
+}
