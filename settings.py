@@ -15,7 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-CONTRACTS_DIR = os.path.join(BASE_DIR, 'core', 'contracts')
+SOLIDITY_CONTRACTS_DIR = os.path.join(BASE_DIR, 'core', 'contracts')
+SOLIDITY_MIGRATIONS_DIR = os.path.join(BASE_DIR, 'core', 'migrations')
 
 
 # Quick-start development settings - unsuitable for production
