@@ -20,29 +20,32 @@ class Command(BaseCommand):
         except Token.DoesNotExist:
             raise CommandError('Token "%s" does not exist' % token_pk)
         else:
-            context = {
-                'TOKEN_TYPE': token.token_type,
-                'TOKEN_CLASS_NAME': token.class_name,
-                'TOKEN_PUBLIC_NAME': token.public_name,
-                'TOKEN_SYMBOL_NAME': token.symbol,
-                'TOKEN_DECIMALS': token.decimals
-            }
+            self.generate_token_contracts(token)
 
-            in_fname = os.path.join(CONTRACTS_DIR, 'Token.sol.in')
-            out_fname = os.path.join(CONTRACTS_DIR, token.class_name + '.sol')
+            self.stdout.write(
+                self.style.SUCCESS('Successful: "%s"' % token_pk)
+            )
 
-            with open(in_fname, 'r') as in_f, open(out_fname, 'w') as out_f:
-                template = Template(in_f.read())
-                out_f.write(template.render(**context))
+    def generate_token_contracts(self, token):
+        context = {
+            'TOKEN_TYPE': token.token_type,
+            'TOKEN_CLASS_NAME': token.class_name,
+            'TOKEN_PUBLIC_NAME': token.public_name,
+            'TOKEN_SYMBOL_NAME': token.symbol,
+            'TOKEN_DECIMALS': token.decimals
+        }
 
-            in_fname = os.path.join(CONTRACTS_DIR, 'Crowdsale.sol.in')
-            out_fname = os.path.join(CONTRACTS_DIR,
-                                     token.class_name + 'Crowdsale.sol')
+        in_fname = os.path.join(CONTRACTS_DIR, 'Token.sol.in')
+        out_fname = os.path.join(CONTRACTS_DIR, token.class_name + '.sol')
 
-            with open(in_fname, 'r') as in_f, open(out_fname, 'w') as out_f:
-                template = Template(in_f.read())
-                out_f.write(template.render(**context))
+        with open(in_fname, 'r') as in_f, open(out_fname, 'w') as out_f:
+            template = Template(in_f.read())
+            out_f.write(template.render(**context))
 
-        self.stdout.write(
-            self.style.SUCCESS('Successful: "%s"' % token_pk)
-        )
+        in_fname = os.path.join(CONTRACTS_DIR, 'Crowdsale.sol.in')
+        out_fname = os.path.join(CONTRACTS_DIR,
+                                 token.class_name + 'Crowdsale.sol')
+
+        with open(in_fname, 'r') as in_f, open(out_fname, 'w') as out_f:
+            template = Template(in_f.read())
+            out_f.write(template.render(**context))
