@@ -9,12 +9,13 @@ class Token(models.Model):
 
     symbol = models.CharField(max_length=4)
 
-    decimals = models.IntergerField(
+    decimals = models.IntegerField(
         default=18,
         validators=[MaxValueValidator(20), MinValueValidator(0)]
     )
 
     phase = models.CharField(
+        max_length=8,
         choices=PHASES,
         default=PHASES[0][0],
     )
