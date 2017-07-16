@@ -1,7 +1,7 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from .conf import PHASES, TOKEN_TYPES
+from .conf import PHASES
 
 
 class Token(models.Model):
@@ -21,9 +21,8 @@ class Token(models.Model):
     )
 
     token_type = models.CharField(
-        max_length=12,
-        choices=TOKEN_TYPES,
-        default=TOKEN_TYPES[0][0],
+        max_length=20,
+        default='MintableToken',
     )
 
     @property

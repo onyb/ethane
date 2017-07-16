@@ -3,7 +3,3 @@ PHASES = (
     ('PHASE_02', 'Active',),
     ('PHASE_02', 'Inactive',),
 )
-
-TOKEN_TYPES = (
-    ('MintableToken', 'Mintable Token'),
-)
