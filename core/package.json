@@ -3,7 +3,7 @@
     "version": "0.0.1",
     "author": [
         "Anirudha Bose <ani07nov@gmail.com>",
-        "vperez@yolaw.fr"
+        "Vincent Perez <perezv815@gmail.com>"
     ],
     "description": "A platform to create and distribute cryptotokens via Initial Coin Offerings (ICO)",
     "repository": {

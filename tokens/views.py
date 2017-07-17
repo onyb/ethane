@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def token_distribution(request):
+    return render(request, 'tokens/token_distribution.html')
