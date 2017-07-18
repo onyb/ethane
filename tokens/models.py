@@ -92,23 +92,34 @@ class Token(models.Model):
             'TOKEN_DECIMALS': self.decimals
         }
 
-        migration = sorted(
+        last_migration = sorted(
             f
             for f in os.listdir(settings.SOLIDITY_MIGRATIONS_DIR)
             if os.path.isfile(os.path.join(settings.SOLIDITY_MIGRATIONS_DIR, f))
         ).pop()
 
-        idx = int(re.match('\d+', migration).group()) + 1
+        migration_data = open(
+            os.path.join(settings.SOLIDITY_MIGRATIONS_DIR,
+                         last_migration),
+            'r'
+        ).read()
+
+        last_idx = int(re.match('\d+', last_migration).group())
 
         in_fname = os.path.join(settings.SOLIDITY_TEMPLATES_DIR, 'TokenMigration.js.in')
         out_fname = os.path.join(
             settings.SOLIDITY_MIGRATIONS_DIR,
-            '{}_deploy_{}.js'.format(idx, self.class_name.lower())
+            '{}_deploy_{}.js'.format(last_idx + 1, self.class_name.lower())
         )
 
-        with open(in_fname, 'r') as in_f, open(out_fname, 'w') as out_f:
-            template = Template(in_f.read())
-            out_f.write(template.render(**context))
+        with open(in_fname, 'r') as in_f:
+            out = Template(in_f.read()).render(**context)
+            if out == migration_data:
+                return False
+            else:
+                with open(out_fname, 'w') as out_f:
+                    out_f.write(out)
+                    return True
 
     def compile(self):
         return subprocess.check_output(
