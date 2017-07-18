@@ -1,0 +1,9 @@
+pragma solidity ^0.4.11;
+
+import 'zeppelin-solidity/contracts/token/MintableToken.sol';
+
+contract {{ TOKEN_CLASS_NAME }} is MintableToken {
+  string public name = "{{ TOKEN_PUBLIC_NAME }}";
+  string public symbol = "{{ TOKEN_SYMBOL_NAME }}";
+  uint256 public decimals = {{ TOKEN_DECIMALS }};
+}
