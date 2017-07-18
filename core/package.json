@@ -15,7 +15,10 @@
         "node": ">=0.10"
     },
     "scripts": {
-        "start": ""
+        "compile": "./node_modules/truffle/build/cli.bundled.js compile",
+        "deploy": "./node_modules/truffle/build/cli.bundled.js deploy",
+        "console": "./node_modules/truffle/build/cli.bundled.js console",
+        "networks": "./node_modules/truffle/build/cli.bundled.js networks"
     },
     "dependencies": {
         "ethereumjs-testrpc": "4.0.1",
