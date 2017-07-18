@@ -13,6 +13,8 @@ from .conf import PHASES
 class Token(models.Model):
     public_name = models.CharField(max_length=200)
 
+    contract_address = models.CharField(max_length=42, default='0x')
+
     symbol = models.CharField(max_length=4)
 
     decimals = models.IntegerField(
@@ -37,8 +39,7 @@ class Token(models.Model):
             map(lambda s: s.title(), self.public_name.split())
         )
 
-    @property
-    def contract_address(self):
+    def get_contract_address(self):
         out = subprocess.check_output(
             ['npm', 'run', 'networks'],
             cwd=os.path.join(settings.BASE_DIR, 'core')
@@ -53,10 +54,12 @@ class Token(models.Model):
         self.generate_contracts()
         self.generate_migration()
 
-        super().save(*args, **kwargs)
-
         self.compile()
         self.deploy()
+
+        self.contract_address = self.get_contract_address()
+
+        super().save(*args, **kwargs)
 
     def generate_contracts(self):
         context = {
