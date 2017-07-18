@@ -33,6 +33,21 @@ class Token(models.Model):
         default='MintableToken',
     )
 
+    start_block_offset = models.IntegerField(
+        default=2,
+        validators=[MinValueValidator(1)]
+    )
+
+    end_block_offset = models.IntegerField(
+        default=300,
+        validators=[MinValueValidator(300)]
+    )
+
+    rate = models.FloatField(
+        default=1.0,
+        validators=[MinValueValidator(0.0)]
+    )
+
     @property
     def class_name(self):
         return ''.join(
@@ -87,9 +102,9 @@ class Token(models.Model):
     def generate_migration(self):
         context = {
             'TOKEN_CLASS_NAME': self.class_name,
-            'TOKEN_PUBLIC_NAME': self.public_name,
-            'TOKEN_SYMBOL_NAME': self.symbol,
-            'TOKEN_DECIMALS': self.decimals
+            'TOKEN_START_BLOCK_OFFSET': self.start_block_offset,
+            'TOKEN_END_BLOCK_OFFSET': self.end_block_offset,
+            'ETH_TO_TOKEN_RATE': self.rate
         }
 
         last_migration = sorted(

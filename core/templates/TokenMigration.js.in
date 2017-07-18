@@ -1,9 +1,9 @@
 var {{ TOKEN_CLASS_NAME }}Crowdsale = artifacts.require("./{{ TOKEN_CLASS_NAME }}Crowdsale.sol")
 
 module.exports = function(deployer, network, accounts) {
-  const startBlock = web3.eth.blockNumber + 2
-  const endBlock = startBlock + 300
-  const rate = new web3.BigNumber(1000)
+  const startBlock = web3.eth.blockNumber + {{ TOKEN_START_BLOCK_OFFSET }}
+  const endBlock = startBlock + {{ TOKEN_END_BLOCK_OFFSET }}
+  const rate = new web3.BigNumber({{ ETH_TO_TOKEN_RATE }})
   const wallet = web3.eth.accounts[0]
 
   deployer.deploy({{ TOKEN_CLASS_NAME }}Crowdsale, startBlock, endBlock, rate, wallet)
