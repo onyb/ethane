@@ -1,10 +1,12 @@
 import os
 import re
 import subprocess
+from datetime import datetime
 
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils import timezone
 from jinja2 import Template
 
 from .conf import PHASES
@@ -20,6 +22,12 @@ class Token(models.Model):
     decimals = models.IntegerField(
         default=18,
         validators=[MaxValueValidator(20), MinValueValidator(0)]
+    )
+
+    phase = models.CharField(
+        max_length=8,
+        choices=PHASES,
+        blank=True
     )
 
     token_type = models.CharField(
@@ -42,6 +50,9 @@ class Token(models.Model):
         validators=[MinValueValidator(0.0)]
     )
 
+    ico_start_date = models.DateTimeField(blank=True, null=True)
+    ico_end_date = models.DateTimeField(blank=True, null=True)
+
     @property
     def class_name(self):
         return ''.join(
@@ -59,7 +70,22 @@ class Token(models.Model):
             out.decode()
         ).group(1)
 
+    def clean(self):
+        now = timezone.now()
+
+        if not self.ico_start_date:
+            self.ico_start_date = now
+
+        if now < self.ico_start_date:
+            self.phase = 'PHASE_01'
+        elif not self.ico_end_date or now < self.ico_end_date:
+            self.phase = 'PHASE_02'
+        elif now > self.ico_end_date:
+            self.phase = 'PHASE_03'
+
     def save(self, *args, **kwargs):
+        self.clean()
+
         self.generate_contracts()
         self.generate_migration()
 
