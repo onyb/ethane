@@ -10,10 +10,15 @@ const DistributionContainer = () => (
     <Grid columns={2}>
       <Grid.Row>
         <Grid.Column>
-          <Label>Current Distribution: 10000</Label>
+          <Label>ETH rate: 0.06</Label>
         </Grid.Column>
         <Grid.Column>
           <Label>ETH received: 77</Label>
+        </Grid.Column>
+      </Grid.Row>
+      <Grid.Row>
+        <Grid.Column>
+          <Label>Contact adress: 0xcd234a471b72ba2f1ccf0a70fcaba648a5eecd8d</Label>
         </Grid.Column>
       </Grid.Row>
     </Grid>
