@@ -22,12 +22,6 @@ class Token(models.Model):
         validators=[MaxValueValidator(20), MinValueValidator(0)]
     )
 
-    phase = models.CharField(
-        max_length=8,
-        choices=PHASES,
-        default=PHASES[0][0],
-    )
-
     token_type = models.CharField(
         max_length=20,
         default='MintableToken',
