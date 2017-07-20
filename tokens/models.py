@@ -71,7 +71,7 @@ class Token(models.Model):
         )
 
         return re.search(
-            r'{}Crowdsale: ([A-z\d]+)'.format(self.class_name),
+            r'{}{}Crowdsale: ([A-z\d]+)'.format(self.class_name, self.token_type),
             out.decode()
         ).group(1)
 
@@ -88,8 +88,10 @@ class Token(models.Model):
         elif now > self.ico_end_date:
             self.phase = 'PHASE_03'
 
-        if not self.cap:
-            self.token_type = TOKEN_TYPES[1][0]
+        if self.cap:
+            self.token_type = TOKEN_TYPES[0][1]
+        else:
+            self.token_type = TOKEN_TYPES[1][1]
 
     def save(self, *args, **kwargs):
         self.clean()
@@ -108,6 +110,7 @@ class Token(models.Model):
         context = {
             'TOKEN_CLASS_NAME': self.class_name,
             'TOKEN_PUBLIC_NAME': self.public_name,
+            'TOKEN_TYPE': self.token_type,
             'TOKEN_SYMBOL_NAME': self.symbol,
             'TOKEN_DECIMALS': self.decimals
         }
@@ -121,7 +124,7 @@ class Token(models.Model):
 
         in_fname = os.path.join(settings.SOLIDITY_TEMPLATES_DIR, 'Crowdsale.sol.in')
         out_fname = os.path.join(settings.SOLIDITY_CONTRACTS_DIR,
-                                 self.class_name + 'Crowdsale.sol')
+                                 self.class_name + self.token_type + 'Crowdsale.sol')
 
         with open(in_fname, 'r') as in_f, open(out_fname, 'w') as out_f:
             template = Template(in_f.read())
@@ -130,6 +133,7 @@ class Token(models.Model):
     def generate_migration(self):
         context = {
             'TOKEN_CLASS_NAME': self.class_name,
+            'TOKEN_TYPE': self.token_type,
             'TOKEN_START_BLOCK_OFFSET': self.start_block_offset,
             'TOKEN_END_BLOCK_OFFSET': self.end_block_offset,
             'ETH_TO_TOKEN_RATE': self.rate
