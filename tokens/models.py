@@ -122,7 +122,10 @@ class Token(models.Model):
             template = Template(in_f.read())
             out_f.write(template.render(**context))
 
-        in_fname = os.path.join(settings.SOLIDITY_TEMPLATES_DIR, 'Crowdsale.sol.in')
+        in_fname = os.path.join(
+            settings.SOLIDITY_TEMPLATES_DIR,
+            'Crowdsale.sol.in' if self.token_type == 'Uncapped' else 'CappedCrowdsale.sol.in'
+        )
         out_fname = os.path.join(settings.SOLIDITY_CONTRACTS_DIR,
                                  self.class_name + self.token_type + 'Crowdsale.sol')
 
@@ -136,7 +139,8 @@ class Token(models.Model):
             'TOKEN_TYPE': self.token_type,
             'TOKEN_START_BLOCK_OFFSET': self.start_block_offset,
             'TOKEN_END_BLOCK_OFFSET': self.end_block_offset,
-            'ETH_TO_TOKEN_RATE': self.rate
+            'ETH_TO_TOKEN_RATE': self.rate,
+            'TOKEN_CAP': self.cap
         }
 
         last_migration = sorted(

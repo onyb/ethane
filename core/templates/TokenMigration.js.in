@@ -6,5 +6,11 @@ module.exports = function(deployer, network, accounts) {
   const rate = new web3.BigNumber({{ ETH_TO_TOKEN_RATE }})
   const wallet = web3.eth.accounts[0]
 
+{% if TOKEN_TYPE == 'Capped' %}
+  const cap = new web3.BigNumber({{ TOKEN_CAP }})
+  deployer.deploy({{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale, startBlock, endBlock, rate, wallet, cap)
+{% else %}
   deployer.deploy({{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale, startBlock, endBlock, rate, wallet)
+{% endif %}
+
 }

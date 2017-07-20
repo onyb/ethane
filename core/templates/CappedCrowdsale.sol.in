@@ -1,12 +1,12 @@
 pragma solidity ^0.4.11;
 
 import './{{  TOKEN_CLASS_NAME }}.sol';
-import 'zeppelin-solidity/contracts/crowdsale/Crowdsale.sol';
+import 'zeppelin-solidity/contracts/crowdsale/CappedCrowdsale.sol';
 
 
-contract {{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale is Crowdsale {
+contract {{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale is CappedCrowdsale {
 
-  function {{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale(uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _wallet) Crowdsale(_startBlock, _endBlock, _rate, _wallet){
+  function {{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale(uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _wallet, uint256 _cap) Crowdsale(_startBlock, _endBlock, _rate, _wallet) CappedCrowdsale(_cap) {
     require(_startBlock >= block.number);
     require(_endBlock >= _startBlock);
     require(_rate > 0);
@@ -17,6 +17,8 @@ contract {{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale is Crowdsale {
     endBlock = _endBlock;
     rate = _rate;
     wallet = _wallet;
+
+    cap = _cap;
   }
 
   function createTokenContract() internal returns (MintableToken) {
