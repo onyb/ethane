@@ -9,7 +9,7 @@ from django.db import models
 from django.utils import timezone
 from jinja2 import Template
 
-from .conf import PHASES
+from .conf import PHASES, TOKEN_TYPES
 
 
 class Token(models.Model):
@@ -30,9 +30,14 @@ class Token(models.Model):
         blank=True
     )
 
+    cap = models.IntegerField(
+        blank=True, null=True
+    )
+
     token_type = models.CharField(
         max_length=20,
-        default='MintableToken',
+        choices=TOKEN_TYPES,
+        blank=True
     )
 
     start_block_offset = models.IntegerField(
@@ -82,6 +87,9 @@ class Token(models.Model):
             self.phase = 'PHASE_02'
         elif now > self.ico_end_date:
             self.phase = 'PHASE_03'
+
+        if not self.cap:
+            self.token_type = TOKEN_TYPES[1][0]
 
     def save(self, *args, **kwargs):
         self.clean()
