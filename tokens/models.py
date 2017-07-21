@@ -65,11 +65,19 @@ class Token(models.Model):
         )
 
     @property
-    def ABI(self):
-        contract_json_path = os.path.join(settings.SOLIDITY_ABI_DIR,
-                                          '{}.json'.format(self.class_name))
-        with open(contract_json_path) as f:
+    def crowdsale_class_name(self):
+        return self.class_name + self.token_type + 'Crowdsale'
+
+    @property
+    def meta(self):
+        meta_json_path = os.path.join(settings.SOLIDITY_ABI_DIR,
+                                      '{}.json'.format(self.class_name))
+        with open(meta_json_path) as f:
             return json.load(f)
+
+    @property
+    def abi(self):
+        return self.meta['abi']
 
     def get_contract_address(self):
         out = subprocess.check_output(
@@ -117,7 +125,7 @@ class Token(models.Model):
         context = {
             'TOKEN_CLASS_NAME': self.class_name,
             'TOKEN_PUBLIC_NAME': self.public_name,
-            'TOKEN_TYPE': self.token_type,
+            'CROWDSALE_CLASS_NAME': self.crowdsale_class_name,
             'TOKEN_SYMBOL_NAME': self.symbol,
             'TOKEN_DECIMALS': self.decimals
         }
@@ -130,8 +138,7 @@ class Token(models.Model):
             out_f.write(template.render(**context))
 
         in_fname = os.path.join(
-            settings.SOLIDITY_TEMPLATES_DIR,
-            'Crowdsale.sol.in' if self.token_type == 'Uncapped' else 'CappedCrowdsale.sol.in'
+            settings.SOLIDITY_TEMPLATES_DIR, self.token_type + 'Crowdsale.sol.in'
         )
         out_fname = os.path.join(settings.SOLIDITY_CONTRACTS_DIR,
                                  self.class_name + self.token_type + 'Crowdsale.sol')
@@ -144,6 +151,7 @@ class Token(models.Model):
         context = {
             'TOKEN_CLASS_NAME': self.class_name,
             'TOKEN_TYPE': self.token_type,
+            'CROWDSALE_CLASS_NAME': self.crowdsale_class_name,
             'TOKEN_START_BLOCK_OFFSET': self.start_block_offset,
             'TOKEN_END_BLOCK_OFFSET': self.end_block_offset,
             'ETH_TO_TOKEN_RATE': self.rate,
@@ -167,7 +175,7 @@ class Token(models.Model):
         in_fname = os.path.join(settings.SOLIDITY_TEMPLATES_DIR, 'TokenMigration.js.in')
         out_fname = os.path.join(
             settings.SOLIDITY_MIGRATIONS_DIR,
-            '{}_deploy_{}.js'.format(last_idx + 1, self.class_name.lower())
+            '{}_deploy_{}.js'.format(last_idx + 1, self.crowdsale_class_name.lower())
         )
 
         with open(in_fname, 'r') as in_f:

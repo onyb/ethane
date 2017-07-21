@@ -1,4 +1,4 @@
-var {{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale = artifacts.require("./{{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale.sol")
+var {{ CROWDSALE_CLASS_NAME }} = artifacts.require("./{{ CROWDSALE_CLASS_NAME }}.sol")
 
 module.exports = function(deployer, network, accounts) {
   const startBlock = web3.eth.blockNumber + {{ TOKEN_START_BLOCK_OFFSET }}
@@ -8,9 +8,9 @@ module.exports = function(deployer, network, accounts) {
 
 {% if TOKEN_TYPE == 'Capped' %}
   const cap = new web3.BigNumber({{ TOKEN_CAP }})
-  deployer.deploy({{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale, startBlock, endBlock, rate, wallet, cap)
+  deployer.deploy({{ CROWDSALE_CLASS_NAME }}, startBlock, endBlock, rate, wallet, cap)
 {% else %}
-  deployer.deploy({{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale, startBlock, endBlock, rate, wallet)
+  deployer.deploy({{ CROWDSALE_CLASS_NAME }}, startBlock, endBlock, rate, wallet)
 {% endif %}
 
 }

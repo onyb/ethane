@@ -4,9 +4,9 @@ import './{{  TOKEN_CLASS_NAME }}.sol';
 import 'zeppelin-solidity/contracts/crowdsale/Crowdsale.sol';
 
 
-contract {{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale is Crowdsale {
+contract {{ CROWDSALE_CLASS_NAME }} is Crowdsale {
 
-  function {{ TOKEN_CLASS_NAME }}{{ TOKEN_TYPE }}Crowdsale(uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _wallet) Crowdsale(_startBlock, _endBlock, _rate, _wallet){
+  function {{ CROWDSALE_CLASS_NAME }}(uint256 _startBlock, uint256 _endBlock, uint256 _rate, address _wallet) Crowdsale(_startBlock, _endBlock, _rate, _wallet){
     require(_startBlock >= block.number);
     require(_endBlock >= _startBlock);
     require(_rate > 0);
