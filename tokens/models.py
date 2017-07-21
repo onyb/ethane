@@ -1,7 +1,7 @@
 import os
 import re
 import subprocess
-from datetime import datetime
+import json
 
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -63,6 +63,13 @@ class Token(models.Model):
         return ''.join(
             map(lambda s: s.title(), self.public_name.split())
         )
+
+    @property
+    def ABI(self):
+        contract_json_path = os.path.join(settings.SOLIDITY_ABI_DIR,
+                                          '{}.json'.format(self.class_name))
+        with open(contract_json_path) as f:
+            return json.load(f)
 
     def get_contract_address(self):
         out = subprocess.check_output(

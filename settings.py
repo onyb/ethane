@@ -18,6 +18,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SOLIDITY_CONTRACTS_DIR = os.path.join(BASE_DIR, 'core', 'contracts')
 SOLIDITY_MIGRATIONS_DIR = os.path.join(BASE_DIR, 'core', 'migrations')
 SOLIDITY_TEMPLATES_DIR = os.path.join(BASE_DIR, 'core', 'templates')
+SOLIDITY_ABI_DIR = os.path.join(BASE_DIR, 'core', 'build', 'contracts')
 
 
 # Quick-start development settings - unsuitable for production
