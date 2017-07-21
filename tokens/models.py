@@ -15,8 +15,6 @@ from .conf import PHASES, TOKEN_TYPES
 class Token(models.Model):
     public_name = models.CharField(max_length=200)
 
-    contract_address = models.CharField(max_length=42, default='0x')
-
     symbol = models.CharField(max_length=4)
 
     decimals = models.IntegerField(
@@ -70,25 +68,25 @@ class Token(models.Model):
 
     @property
     def meta(self):
-        meta_json_path = os.path.join(settings.SOLIDITY_ABI_DIR,
-                                      '{}.json'.format(self.class_name))
-        with open(meta_json_path) as f:
-            return json.load(f)
+        meta_json_path = os.path.join(
+            settings.SOLIDITY_ABI_DIR,
+            '{}.json'.format(self.crowdsale_class_name)
+        )
+
+        if not os.path.exists(meta_json_path):
+            return {}
+        else:
+            with open(meta_json_path) as f:
+                return json.load(f)
 
     @property
     def abi(self):
-        return self.meta['abi']
+        return self.meta.get('abi')
 
-    def get_contract_address(self):
-        out = subprocess.check_output(
-            ['npm', 'run', 'networks'],
-            cwd=os.path.join(settings.BASE_DIR, 'core')
-        )
-
-        return re.search(
-            r'{}{}Crowdsale: ([A-z\d]+)'.format(self.class_name, self.token_type),
-            out.decode()
-        ).group(1)
+    @property
+    def contract_address(self):
+        networks = self.meta.get('networks', {}).values()
+        return sorted(networks, key=lambda n: n['updated_at'])[-1]['address']
 
     def clean(self):
         now = timezone.now()
@@ -116,8 +114,6 @@ class Token(models.Model):
 
         self.compile()
         self.deploy()
-
-        self.contract_address = self.get_contract_address()
 
         super().save(*args, **kwargs)
 
