@@ -1,15 +1,14 @@
-import os
-import re
-import subprocess
 import json
+import os
+import subprocess
 
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
-from jinja2 import Template
 
 from .conf import PHASES, TOKEN_TYPES
+from .utils import generate_migration, generate_contracts
 
 
 class Token(models.Model):
@@ -109,79 +108,13 @@ class Token(models.Model):
     def save(self, *args, **kwargs):
         self.clean()
 
-        self.generate_contracts()
-        self.generate_migration()
+        generate_contracts(self)
+        generate_migration(self)
 
         self.compile()
         self.deploy()
 
         super().save(*args, **kwargs)
-
-    def generate_contracts(self):
-        context = {
-            'TOKEN_CLASS_NAME': self.class_name,
-            'TOKEN_PUBLIC_NAME': self.public_name,
-            'CROWDSALE_CLASS_NAME': self.crowdsale_class_name,
-            'TOKEN_SYMBOL_NAME': self.symbol,
-            'TOKEN_DECIMALS': self.decimals
-        }
-
-        in_fname = os.path.join(settings.SOLIDITY_TEMPLATES_DIR, 'Token.sol.in')
-        out_fname = os.path.join(settings.SOLIDITY_CONTRACTS_DIR, self.class_name + '.sol')
-
-        with open(in_fname, 'r') as in_f, open(out_fname, 'w') as out_f:
-            template = Template(in_f.read())
-            out_f.write(template.render(**context))
-
-        in_fname = os.path.join(
-            settings.SOLIDITY_TEMPLATES_DIR, self.token_type + 'Crowdsale.sol.in'
-        )
-        out_fname = os.path.join(settings.SOLIDITY_CONTRACTS_DIR,
-                                 self.class_name + self.token_type + 'Crowdsale.sol')
-
-        with open(in_fname, 'r') as in_f, open(out_fname, 'w') as out_f:
-            template = Template(in_f.read())
-            out_f.write(template.render(**context))
-
-    def generate_migration(self):
-        context = {
-            'TOKEN_CLASS_NAME': self.class_name,
-            'TOKEN_TYPE': self.token_type,
-            'CROWDSALE_CLASS_NAME': self.crowdsale_class_name,
-            'TOKEN_START_BLOCK_OFFSET': self.start_block_offset,
-            'TOKEN_END_BLOCK_OFFSET': self.end_block_offset,
-            'ETH_TO_TOKEN_RATE': self.rate,
-            'TOKEN_CAP': self.cap
-        }
-
-        last_migration = sorted(
-            f
-            for f in os.listdir(settings.SOLIDITY_MIGRATIONS_DIR)
-            if os.path.isfile(os.path.join(settings.SOLIDITY_MIGRATIONS_DIR, f))
-        ).pop()
-
-        migration_data = open(
-            os.path.join(settings.SOLIDITY_MIGRATIONS_DIR,
-                         last_migration),
-            'r'
-        ).read()
-
-        last_idx = int(re.match('\d+', last_migration).group())
-
-        in_fname = os.path.join(settings.SOLIDITY_TEMPLATES_DIR, 'TokenMigration.js.in')
-        out_fname = os.path.join(
-            settings.SOLIDITY_MIGRATIONS_DIR,
-            '{}_deploy_{}.js'.format(last_idx + 1, self.crowdsale_class_name.lower())
-        )
-
-        with open(in_fname, 'r') as in_f:
-            out = Template(in_f.read()).render(**context)
-            if out == migration_data:
-                return False
-            else:
-                with open(out_fname, 'w') as out_f:
-                    out_f.write(out)
-                    return True
 
     def compile(self):
         return subprocess.check_output(
