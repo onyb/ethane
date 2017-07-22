@@ -26,12 +26,6 @@ class Token(models.Model):
         blank=True, null=True
     )
 
-    token_type = models.CharField(
-        max_length=20,
-        choices=TOKEN_TYPES,
-        blank=True
-    )
-
     start_block_offset = models.IntegerField(
         default=2,
         validators=[MinValueValidator(1)]
@@ -86,6 +80,10 @@ class Token(models.Model):
         return sorted(networks, key=lambda n: n['updated_at'])[-1]['address']
 
     @property
+    def token_type(self):
+        return 'Capped' if self.cap else 'Uncapped'
+
+    @property
     def _cap_reached(self):
         if self.token_type == 'Uncapped':
             return False
@@ -109,15 +107,7 @@ class Token(models.Model):
         else:
             return 'FAILED'
 
-    def clean(self):
-        if self.cap:
-            self.token_type = TOKEN_TYPES[0][1]
-        else:
-            self.token_type = TOKEN_TYPES[1][1]
-
     def save(self, *args, **kwargs):
-        self.clean()
-
         generate_contracts(self)
         generate_migration(self)
 
