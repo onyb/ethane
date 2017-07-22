@@ -17,27 +17,21 @@ class Token(models.Model):
     symbol = models.CharField(max_length=4)
 
     decimals = models.IntegerField(
-        default=18,
-        validators=[MaxValueValidator(20), MinValueValidator(0)]
+        default=18, validators=[MaxValueValidator(20), MinValueValidator(0)]
     )
 
-    cap = models.IntegerField(
-        blank=True, null=True
-    )
+    cap = models.IntegerField(blank=True, null=True)
 
     start_block_offset = models.IntegerField(
-        default=2,
-        validators=[MinValueValidator(1)]
+        default=2, validators=[MinValueValidator(1)]
     )
 
     end_block_offset = models.IntegerField(
-        default=300,
-        validators=[MinValueValidator(300)]
+        default=300, validators=[MinValueValidator(300)]
     )
 
     rate = models.FloatField(
-        default=1.0,
-        validators=[MinValueValidator(0.0)]
+        default=1.0, validators=[MinValueValidator(0.0)]
     )
 
     ico_start_date = models.DateTimeField()
