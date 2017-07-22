@@ -74,7 +74,22 @@ class Token(models.Model):
 
     @property
     def token_type(self):
+        if not self.pk:
+            return '-'
+
         return 'Capped' if self.cap else 'Uncapped'
+
+    @property
+    def wei_raised(self):
+        contract = web3.eth.contract(address=self.contract_address, abi=self.abi)
+        return contract.call().weiRaised()
+
+    @property
+    def eth_raised(self):
+        if not self.pk:
+            return '-'
+
+        return web3.fromWei(self.wei_raised, 'ether')
 
     @property
     def _cap_reached(self):
