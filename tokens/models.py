@@ -8,7 +8,6 @@ from django.db import models
 from django.utils import timezone
 
 from . import web3
-from .conf import TOKEN_TYPES
 from .utils import generate_migration, generate_contracts
 
 
@@ -117,13 +116,13 @@ class Token(models.Model):
         super().save(*args, **kwargs)
 
     def compile(self):
-        return subprocess.check_output(
+        return subprocess.check_call(
             ['npm', 'run', 'compile'],
             cwd=os.path.join(settings.BASE_DIR, 'core')
         )
 
     def deploy(self):
-        return subprocess.check_output(
+        return subprocess.check_call(
             ['npm', 'run', 'deploy'],
             cwd=os.path.join(settings.BASE_DIR, 'core')
         )
