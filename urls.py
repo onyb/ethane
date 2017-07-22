@@ -25,5 +25,9 @@ urlpatterns = [
 
     url(r'^api/token/(?P<symbol>[A-z]+)/$',
         tokenViews.TokenAPIView.as_view(),
-        name='token-view')
+        name='token-view'),
+
+    url(r'^api/tokens/$',
+        tokenViews.TokensCollectionView.as_view(),
+        name='tokens-list-view')
 ]
