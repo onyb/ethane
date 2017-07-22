@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from .conf import PHASES, TOKEN_TYPES
 from .utils import generate_migration, generate_contracts
+from . import web3
 
 
 class Token(models.Model):
@@ -19,12 +20,6 @@ class Token(models.Model):
     decimals = models.IntegerField(
         default=18,
         validators=[MaxValueValidator(20), MinValueValidator(0)]
-    )
-
-    phase = models.CharField(
-        max_length=8,
-        choices=PHASES,
-        blank=True
     )
 
     cap = models.IntegerField(
@@ -52,8 +47,8 @@ class Token(models.Model):
         validators=[MinValueValidator(0.0)]
     )
 
-    ico_start_date = models.DateTimeField(blank=True, null=True)
-    ico_end_date = models.DateTimeField(blank=True, null=True)
+    ico_start_date = models.DateTimeField()
+    ico_end_date = models.DateTimeField()
 
     @property
     def class_name(self):
@@ -84,21 +79,42 @@ class Token(models.Model):
 
     @property
     def contract_address(self):
+        if not self.pk:
+            return None
+
         networks = self.meta.get('networks', {}).values()
         return sorted(networks, key=lambda n: n['updated_at'])[-1]['address']
+
+
+    @property
+    def _cap_reached(self):
+        if self.token_type == 'Uncapped':
+            return False
+
+        contract = web3.eth.contract(address=self.contract_address, abi=self.abi)
+        return contract.call().hasEnded()
+
+    @property
+    def phase(self):
+        if not self.pk:
+            return None
+
+        now = timezone.now()
+
+        if now < self.ico_start_date:
+            return 'UPCOMING'
+        elif now < self.ico_end_date and not self._cap_reached:
+            return 'ACTIVE'
+        elif self._cap_reached or not self.cap:
+            return 'COMPLETED'
+        else:
+            return 'FAILED'
 
     def clean(self):
         now = timezone.now()
 
         if not self.ico_start_date:
             self.ico_start_date = now
-
-        if now < self.ico_start_date:
-            self.phase = 'PHASE_01'
-        elif not self.ico_end_date or now < self.ico_end_date:
-            self.phase = 'PHASE_02'
-        elif now > self.ico_end_date:
-            self.phase = 'PHASE_03'
 
         if self.cap:
             self.token_type = TOKEN_TYPES[0][1]
