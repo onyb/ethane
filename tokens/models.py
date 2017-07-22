@@ -7,9 +7,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
-from .conf import PHASES, TOKEN_TYPES
-from .utils import generate_migration, generate_contracts
 from . import web3
+from .conf import TOKEN_TYPES
+from .utils import generate_migration, generate_contracts
 
 
 class Token(models.Model):
@@ -80,11 +80,10 @@ class Token(models.Model):
     @property
     def contract_address(self):
         if not self.pk:
-            return None
+            return '-'
 
         networks = self.meta.get('networks', {}).values()
         return sorted(networks, key=lambda n: n['updated_at'])[-1]['address']
-
 
     @property
     def _cap_reached(self):
@@ -97,7 +96,7 @@ class Token(models.Model):
     @property
     def phase(self):
         if not self.pk:
-            return None
+            return '-'
 
         now = timezone.now()
 
@@ -111,11 +110,6 @@ class Token(models.Model):
             return 'FAILED'
 
     def clean(self):
-        now = timezone.now()
-
-        if not self.ico_start_date:
-            self.ico_start_date = now
-
         if self.cap:
             self.token_type = TOKEN_TYPES[0][1]
         else:
