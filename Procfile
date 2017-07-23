@@ -1,1 +1,1 @@
-node: ./go.sh
+web: ./go.sh
