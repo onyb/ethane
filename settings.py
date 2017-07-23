@@ -148,6 +148,11 @@ STATICFILES_DIRS = [
     'tokens/react/static',
 ]
 
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+)
+
 CHAIN_NAME = 'testrpc'
 
 ETHEREUM_NODE_HOST = 'localhost'
