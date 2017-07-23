@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.conf.urls.static import static
 
 from tokens import views as tokenViews
 
@@ -35,4 +36,4 @@ urlpatterns = [
         tokenViews.EthereumAccountView.as_view(),
         name='eth-account-view'),
 
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
