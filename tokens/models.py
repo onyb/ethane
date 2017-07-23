@@ -143,7 +143,16 @@ class Token(models.Model):
         token = web3.eth.contract(address=self.token_address,
                                   abi=self.token_abi)
 
-        return token.call().balanceOf(address)
+        return token.call().balanceOf(address) / self.decimals
+
+    def buy(self, address, amount):
+        contract = web3.eth.contract(address=self.contract_address,
+                                     abi=self.crowdsale_abi)
+
+        return contract.web3.eth.sendTransaction({
+            'from': address, 'to': self.contract_address,
+            'value': web3.toWei(amount, 'ether')
+        })
 
     def save(self, *args, **kwargs):
         generate_contracts(self)
