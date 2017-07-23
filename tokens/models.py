@@ -74,9 +74,6 @@ class Token(models.Model):
 
     @property
     def token_type(self):
-        if not self.pk:
-            return '-'
-
         return 'Capped' if self.cap else 'Uncapped'
 
     @property
