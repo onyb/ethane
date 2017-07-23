@@ -1,6 +1,6 @@
 pragma solidity ^0.4.11;
 
-import 'zeppelin-solidity/contracts/token/MintableToken.sol';
+import './MintableToken.sol';
 
 contract {{ TOKEN_CLASS_NAME }} is MintableToken {
   string public name = "{{ TOKEN_PUBLIC_NAME }}";

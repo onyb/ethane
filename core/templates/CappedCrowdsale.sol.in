@@ -1,7 +1,7 @@
 pragma solidity ^0.4.11;
 
 import './{{  TOKEN_CLASS_NAME }}.sol';
-import 'zeppelin-solidity/contracts/crowdsale/CappedCrowdsale.sol';
+import './CappedCrowdsale.sol';
 
 
 contract {{ CROWDSALE_CLASS_NAME }} is CappedCrowdsale {
