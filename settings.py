@@ -145,7 +145,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = 'static'
 
 STATICFILES_DIRS = [
-    'tokens/react/static',
+#    'tokens/react/static',  Uncomment when React static files exist
 ]
 
 STATICFILES_FINDERS = (
