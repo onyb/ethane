@@ -29,5 +29,10 @@ urlpatterns = [
 
     url(r'^api/tokens/$',
         tokenViews.TokensCollectionView.as_view(),
-        name='tokens-list-view')
+        name='tokens-list-view'),
+
+    url(r'^api/account/$',
+        tokenViews.EthereumAccountView.as_view(),
+        name='eth-account-view'),
+
 ]
