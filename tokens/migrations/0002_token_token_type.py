@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='token',
             name='token_type',
-            field=models.CharField(choices=[('MintableToken', 'Mintable Token')], default='MintableToken', max_length=12),
+            field=models.CharField(choices=[('MintableToken', 'Mintable Token')], default='MintableToken', max_length=20),
         ),
     ]
