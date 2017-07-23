@@ -16,7 +16,6 @@
     },
     "dependencies": {
         "ethereumjs-testrpc": "4.0.1",
-        "truffle": "3.4.4",
-        "zeppelin-solidity": "1.1.0"
+        "truffle": "3.4.4"
     }
 }
