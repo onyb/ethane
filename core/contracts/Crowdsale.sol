@@ -1,6 +1,6 @@
 pragma solidity ^0.4.11;
 
-import '../token/MintableToken.sol';
+import './MintableToken.sol';
 import '../math/SafeMath.sol';
 
 /**
