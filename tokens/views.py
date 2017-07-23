@@ -10,6 +10,7 @@ from .models import Token
 from .serializers import TokenSerializer
 from . import web3
 
+
 def token_distribution(request):
     return render(request, 'tokens/token_distribution.html')
 
@@ -19,6 +20,11 @@ class TokenAPIView(generics.RetrieveAPIView):
     serializer_class = TokenSerializer
     renderer_classes = (JSONRenderer,)
     lookup_field = 'symbol'
+
+    def post(self, request, *args, **kwargs):
+        token = self.get_object()
+        txn = token.buy(request.session['address'], request.data['eth'])
+        return Response({'txn': txn})
 
 
 class TokensCollectionView(mixins.ListModelMixin, generics.GenericAPIView):
