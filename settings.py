@@ -30,7 +30,7 @@ SECRET_KEY = 'z-)jj=6jn(nd3z7aqj%z=hw*+pur0u+7176i!f8k4@q&3j9pat'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ethane.herokuapp.com', 'localhost', '127.0.0.1', '0.0.0.0']
 
 
 # Application definition
