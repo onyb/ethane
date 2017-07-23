@@ -1,11 +1,16 @@
 web:
   build: .
-  command: 'bash -c ''gunicorn wsgi -b 0.0.0.0:80'''
+  command: 'bash -c ''gunicorn wsgi'''
   working_dir: /app/user
   environment:
     PORT: 8080
   ports:
     - '8080:8080'
+ethrpc:
+  build: .
+  command: 'bash -c ''./core/node_modules/ethereumjs-testrpc/build/cli.node.js'''
+  working_dir: /app/user
+  environment:
 shell:
   build: .
   command: bash
