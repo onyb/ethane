@@ -30,10 +30,15 @@ $ python manage.py runserver
 #### Tech Stack
 ###### Ethane Core
 - [Ethereum](https://www.ethereum.org) as the blockchain app platform.
-- [Solidity](https://solidity.readthedocs.io) for writing the smart contracts.
-- [OpenZepplin](https://openzeppelin.org) as a secure base for Ethane contracts.
-- [Truffle](http://truffleframework.com) for compiling and deploying Solidity contracts.
-
+- [Solidity](https://solidity.readthedocs.io)  for writing smart-contracts.
+- [OpenZepplin](https://openzeppelin.org) as a base for Solidity contracts, for security.
+- [Truffle](http://truffleframework.com) for managing contract artifacts and deployment.
+- [web3.js](https://github.com/ethereum/web3.js) - Javascript library to communicate with the Ethereum node through RPC calls.
 
 ###### Ethane front
-- [React](https://facebook.github.io/react)
+- [React](https://facebook.github.io/react) for rendering the frontend
+- [Redux](http://redux.js.org) - state management
+
+##### Ethane backend
+- Python/Django
+- [PostgreSQL] as the database
