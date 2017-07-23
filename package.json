@@ -14,10 +14,6 @@
     "engines": {
         "node": ">=0.10"
     },
-    "scripts": {
-        "compile": "truffle compile",
-        "deploy": "truffle deploy"
-    },
     "dependencies": {
         "ethereumjs-testrpc": "4.0.1",
         "truffle": "3.4.4",

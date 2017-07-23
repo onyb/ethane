@@ -165,12 +165,12 @@ class Token(models.Model):
 
     def compile(self):
         return subprocess.check_call(
-            ['npm', 'run', 'compile'],
+            ['truffle', 'compile'],
             cwd=os.path.join(settings.BASE_DIR, 'core')
         )
 
     def deploy(self):
         return subprocess.check_call(
-            ['npm', 'run', 'deploy'],
+            ['truffle', 'migrate'],
             cwd=os.path.join(settings.BASE_DIR, 'core')
         )
