@@ -1,3 +1,1 @@
-web: gunicorn wsgi
-
-ethrpc: testrpc
+node: ./go.sh

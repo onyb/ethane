@@ -1,0 +1,2 @@
+testrpc &
+gunicorn wsgi
