@@ -48,7 +48,7 @@ class Token(models.Model):
         return self.class_name + self.token_type + 'Crowdsale'
 
     @property
-    def meta(self):
+    def crowdsale_meta(self):
         meta_json_path = os.path.join(
             settings.SOLIDITY_ABI_DIR,
             '{}.json'.format(self.crowdsale_class_name)
@@ -61,15 +61,15 @@ class Token(models.Model):
                 return json.load(f)
 
     @property
-    def abi(self):
-        return self.meta.get('abi')
+    def crowdsale_abi(self):
+        return self.crowdsale_meta.get('abi')
 
     @property
     def contract_address(self):
         if not self.pk:
             return '-'
 
-        networks = self.meta.get('networks', {}).values()
+        networks = self.crowdsale_meta.get('networks', {}).values()
         return sorted(networks, key=lambda n: n['updated_at'])[-1]['address']
 
     @property
@@ -78,7 +78,7 @@ class Token(models.Model):
 
     @property
     def wei_raised(self):
-        contract = web3.eth.contract(address=self.contract_address, abi=self.abi)
+        contract = web3.eth.contract(address=self.contract_address, abi=self.crowdsale_abi)
         return contract.call().weiRaised()
 
     @property
@@ -89,11 +89,38 @@ class Token(models.Model):
         return web3.fromWei(self.wei_raised, 'ether')
 
     @property
+    def token_address(self):
+        if not self.pk:
+            return '-'
+
+        contract = web3.eth.contract(address=self.contract_address,
+                                     abi=self.crowdsale_abi)
+        return contract.call().token()
+
+    @property
+    def token_abi(self):
+        return self.token_meta.get('abi')
+
+    @property
+    def token_meta(self):
+        meta_json_path = os.path.join(
+            settings.SOLIDITY_ABI_DIR,
+            '{}.json'.format(self.class_name)
+        )
+
+        if not os.path.exists(meta_json_path):
+            return {}
+        else:
+            with open(meta_json_path) as f:
+                return json.load(f)
+
+    @property
     def _cap_reached(self):
         if self.token_type == 'Uncapped':
             return False
 
-        contract = web3.eth.contract(address=self.contract_address, abi=self.abi)
+        contract = web3.eth.contract(address=self.contract_address,
+                                     abi=self.crowdsale_abi)
         return contract.call().hasEnded()
 
     @property
@@ -111,6 +138,12 @@ class Token(models.Model):
             return 'COMPLETED'
         else:
             return 'FAILED'
+
+    def get_balance_of(self, address):
+        token = web3.eth.contract(address=self.token_address,
+                                  abi=self.token_abi)
+
+        return token.call().balanceOf(address)
 
     def save(self, *args, **kwargs):
         generate_contracts(self)
