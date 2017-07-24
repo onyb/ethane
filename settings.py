@@ -142,6 +142,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    'react/static',
+]
+
 STATIC_ROOT = 'static'
 
 CHAIN_NAME = 'testrpc'
