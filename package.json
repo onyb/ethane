@@ -7,7 +7,8 @@
   ],
   "description": "A platform to create and distribute cryptotokens via Initial Coin Offerings (ICO)",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress"
   },
   "engines": {
     "node": ">=4.0.0"
