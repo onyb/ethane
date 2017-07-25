@@ -52,7 +52,7 @@ class CurrentTokenContainer extends Component {
               warning
               icon="warning circle"
               header="You are about to make a proxy transaction!"
-              content="A random wallet pre-loaded with some fake Ether has been assigned to your session. We hold the private key to the same, allowing us to make the transaction on your behalf."
+              content="A random wallet pre-loaded with some fake Ether has been assigned to your browser session. We hold the private key to the same, allowing us to make the transaction on your behalf."
             />
             <Grid columns={2}>
               <Grid.Row>
