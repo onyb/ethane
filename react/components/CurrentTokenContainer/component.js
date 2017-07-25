@@ -19,21 +19,22 @@ class CurrentTokenContainer extends Component {
 
   handleInputChange(value) {
     this.setState({
-        value: value
+      value,
     })
   }
 
-  displayAmountTooltip() {
-    if(this.state.value && isNaN(this.state.value)){
-        return (
-          <Label basic color='red' pointing='left'>Not a valid amount.</Label>
-        )
+  validateInputValue() {
+    if (this.state.value && isNaN(this.state.value)) {
+      return <Label basic color="red" pointing="left">Not a valid amount.</Label>
     }
     else if (this.state.value && parseFloat(this.state.value) > this.props.user.balance) {
-        return (
-            <Label basic color='red' pointing='left'>Not enough balance.</Label>
-        )
+      return <Label basic color="red" pointing="left">Not enough balance.</Label>
     }
+    else if (this.state.value && parseFloat(this.state.value) === 0.0) {
+      return <Label basic color="red" pointing="left">Enter a non-zero amount.</Label>
+    }
+
+    return null;
   }
 
   render() {
@@ -48,10 +49,10 @@ class CurrentTokenContainer extends Component {
           <Modal.Content>
             <Header textAlign="center">Buy {this.props.token.name} ({this.props.token.symbol}) with Ether (ETH)</Header>
             <Message
-                warning
-                icon='warning circle'
-                header='You are about to make a proxy transaction!'
-                content='A random wallet pre-loaded with some fake Ether has been assigned to your session. We hold the private key to the same, allowing us to make the transaction on your behalf.'
+              warning
+              icon="warning circle"
+              header="You are about to make a proxy transaction!"
+              content="A random wallet pre-loaded with some fake Ether has been assigned to your session. We hold the private key to the same, allowing us to make the transaction on your behalf."
             />
             <Grid columns={2}>
               <Grid.Row>
@@ -75,15 +76,19 @@ class CurrentTokenContainer extends Component {
                   <Input
                     placeholder="Enter ETH amount"
                     value={this.state.value}
-                    onChange={(e)=> this.handleInputChange(e.target.value)}
+                    onChange={e => this.handleInputChange(e.target.value)}
                   />
-                  {this.displayAmountTooltip()}
+                  {this.validateInputValue()}
                 </Grid.Column>
               </Grid.Row>
             </Grid>
           </Modal.Content>
           <Modal.Actions>
-            <Button color="green" onClick={this.handleClose}>
+            <Button
+              color="green"
+              disabled={this.state.value === '' || this.validateInputValue() !== null}
+              onClick={this.handleSubmit}
+            >
               <Icon name="checkmark" /> Send Transaction
             </Button>
           </Modal.Actions>
