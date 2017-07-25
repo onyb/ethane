@@ -7,11 +7,13 @@ class CurrentTokenContainer extends Component {
     token: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
   }
+
   state = { modalOpen: false, value: '' }
 
-  handleOpen = () => this.setState({
-    modalOpen: true,
-  })
+  handleOpen = () => {
+    this.props.updateBalances()
+    this.setState({ modalOpen: true })
+  }
 
   handleClose = () => this.setState({
     modalOpen: false,
@@ -65,10 +67,10 @@ class CurrentTokenContainer extends Component {
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
-                  <Label>Your ETH balance: {this.props.user.balance}</Label>
+                  <Label>Your ETH balance: {this.props.user.ETH}</Label>
                 </Grid.Column>
                 <Grid.Column>
-                  <Label>1 {this.props.token.symbol} = {this.props.token.rate} ETH</Label>
+                  <Label>Your {this.props.token.symbol} balance: {this.props.user[this.props.token.symbol] || 0.0}</Label>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
@@ -79,6 +81,9 @@ class CurrentTokenContainer extends Component {
                     onChange={e => this.handleInputChange(e.target.value)}
                   />
                   {this.validateInputValue()}
+                </Grid.Column>
+                <Grid.Column>
+                  <Label>1 {this.props.token.symbol} = {this.props.token.rate} ETH</Label>
                 </Grid.Column>
               </Grid.Row>
             </Grid>

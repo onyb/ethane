@@ -1,4 +1,4 @@
-import { SELECT_TOKEN } from './actions'
+import { SELECT_TOKEN, REFRESH_BALANCES } from './actions'
 
 const initialState = {
   tokens: {
@@ -22,16 +22,15 @@ const initialState = {
     },
   },
   currentToken: 1,
-  user: {
-    address: '0xfffd933a0bc612844eaf0c6fe3e5b8e9b6c1d19c',
-    balance: 0.89,
-  },
+  user: {},
 }
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SELECT_TOKEN:
       return { ...state, currentToken: action.id }
+    case REFRESH_BALANCES:
+      return { ...state, user: action.payload }
     default:
       return state
   }
