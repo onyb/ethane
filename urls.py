@@ -23,7 +23,7 @@ from tokens import views as tokenViews
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
-    url(r'^token-distribution/', tokenViews.token_distribution),
+    url(r'^$', tokenViews.token_distribution),
 
     url(r'^api/token/(?P<symbol>[A-z]+)/$',
         tokenViews.TokenAPIView.as_view(),
