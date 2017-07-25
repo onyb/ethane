@@ -1,7 +1,7 @@
 var webpack = require('webpack');
 
 module.exports = {
-  entry: ['babel-polyfill', './index.js'],
+  entry: ['babel-polyfill', './react/index.js'],
   module: {
     loaders: [
       {
@@ -28,22 +28,19 @@ module.exports = {
           'yjsx-loader',
         ],
       },
+      {
+        enforce: "pre",
+        test: /\.js$/,
+        loader: "eslint-loader",
+        exclude: /node_modules/,
+      },
     ],
   },
   output: {
-    path: './static',
+    path: './react/static',
     filename: 'bundle.js',
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      minimize: true,
-      compress: {
-        warnings: false,
-      },
-    }),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"',
-    }),
     new webpack.ProvidePlugin({
       React: "react",
     }),
