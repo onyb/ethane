@@ -3,8 +3,8 @@ import { SELECT_TOKEN } from './actions'
 const initialState = {
   tokens: {
     1: {
-      name: 'Yolaw-$',
-      symbol: 'YL$',
+      name: 'Digimon Coin',
+      symbol: 'DGX',
       contract_address: '0xcd234a471b72ba2f1ccf0a70fcaba648a5eecd8d',
       rate: 0.06,
       currentlyDistributed: 42000,

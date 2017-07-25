@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Header, Container, Modal, Input, Label, Grid, Icon } from 'semantic-ui-react'
+import { Message, Button, Header, Container, Modal, Input, Label, Grid, Icon } from 'semantic-ui-react'
 
 class CurrentTokenContainer extends Component {
   static propTypes = {
@@ -27,7 +27,13 @@ class CurrentTokenContainer extends Component {
           onClose={this.handleClose}
         >
           <Modal.Content>
-            <Header textAlign="center">{this.props.token.name}</Header>
+            <Header textAlign="center">Buy {this.props.token.name} ({this.props.token.symbol}) with Ether (ETH)</Header>
+            <Message
+                warning
+                icon='warning circle'
+                header='You are about to make a proxy transaction!'
+                content='A random wallet pre-loaded with some fake Ether has been assigned to your session. We hold the private key to the same, allowing us to make the transaction on your behalf.'
+            />
             <Grid columns={2}>
               <Grid.Row>
                 <Grid.Column>
