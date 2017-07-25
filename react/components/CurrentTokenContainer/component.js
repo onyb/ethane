@@ -7,7 +7,7 @@ class CurrentTokenContainer extends Component {
     token: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
   }
-  state = { modalOpen: false }
+  state = { modalOpen: false, value: '' }
 
   handleOpen = () => this.setState({
     modalOpen: true,
@@ -16,6 +16,25 @@ class CurrentTokenContainer extends Component {
   handleClose = () => this.setState({
     modalOpen: false,
   })
+
+  handleInputChange(value) {
+    this.setState({
+        value: value
+    })
+  }
+
+  displayAmountTooltip() {
+    if(this.state.value && isNaN(this.state.value)){
+        return (
+          <Label basic color='red' pointing='left'>Not a valid amount.</Label>
+        )
+    }
+    else if (this.state.value && parseFloat(this.state.value) > this.props.user.balance) {
+        return (
+            <Label basic color='red' pointing='left'>Not enough balance.</Label>
+        )
+    }
+  }
 
   render() {
     return (
@@ -48,19 +67,24 @@ class CurrentTokenContainer extends Component {
                   <Label>Your ETH balance: {this.props.user.balance}</Label>
                 </Grid.Column>
                 <Grid.Column>
-                  <Label>ETH rate: {this.props.token.rate}</Label>
+                  <Label>1 {this.props.token.symbol} = {this.props.token.rate} ETH</Label>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
-                  <Input placeholder="Enter ETH amount" />
+                  <Input
+                    placeholder="Enter ETH amount"
+                    value={this.state.value}
+                    onChange={(e)=> this.handleInputChange(e.target.value)}
+                  />
+                  {this.displayAmountTooltip()}
                 </Grid.Column>
               </Grid.Row>
             </Grid>
           </Modal.Content>
           <Modal.Actions>
             <Button color="green" onClick={this.handleClose}>
-              <Icon name="checkmark" /> Purchase
+              <Icon name="checkmark" /> Send Transaction
             </Button>
           </Modal.Actions>
         </Modal>
