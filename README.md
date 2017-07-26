@@ -1,6 +1,10 @@
 # ethane
 A platform to create and participate in Initial Coin Offerings (ICO)
 
+**Status:** This project is currently in alpha stage, and not sufficiently stable for public usage.
+
+**Demo:** http://ethane.herokuapp.com
+
 #### Running Ethane locally on Ubuntu
 
 **Note:** Make sure you have Python 3.6 and the latest version of Node installed.
@@ -13,7 +17,7 @@ $ npm install
 $ export PATH=`pwd`/node_modules/.bin:$PATH
 $ testrpc
 ```
-##### Launch the Django development server
+###### Launch the Django development server
 
 (in a new tab)
 
