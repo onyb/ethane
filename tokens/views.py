@@ -42,8 +42,16 @@ class EthereumAccountView(generics.GenericAPIView):
     def get(self, request, *args, **kwargs):
         address = request.session.get('address')
 
-        if not address:
-            address = request.session['address'] = random.choice(web3.eth.accounts)
+        wallets_with_balance = [
+            addr
+            for addr in web3.eth.accounts
+            if web3.eth.getBalance(addr) > 0
+        ]
+
+        if not address or address not in wallets_with_balance:
+            address = request.session['address'] = random.choice(
+                wallets_with_balance
+            )
 
         wei = web3.eth.getBalance(address)
         eth = web3.fromWei(wei, 'ether')
